@@ -211,8 +211,7 @@
                     `<li>
                         <span onclick="highlight(${idx})" 
                         class="maincharacter">${character}</span> - 
-                        <span class="cast" contenteditable="true" onblur="this.innerText = sanitize(this.innerText); this.innerText && localStorage.setItem('${character}', sanitize(this.innerText));
-                        updateActorsNamesInScript();"> ${character}</span></li>`;
+                        <span class="cast" contenteditable="true" onblur="this.innerText = sanitize(this.innerText); this.innerText && localStorage.setItem('${character}', sanitize(this.innerText)); updateActorsNamesInScript(script.CHARACTERS);"> ${character}</span></li>`;
             });
         }
 
@@ -356,7 +355,6 @@
         if (newScript) {
             newScript = JSON.parse(newScript);
             newScript.CHARACTERS = newScript.CHARACTERS.map(character => (character[0].toUpperCase() + character.slice(1).toLowerCase()).replaceAll(/\s/g, '_'));
-            console.log(newScript.CHARACTERS[0][0]);
             script = newScript;
             addTitle(newScript.TITLE);
             fillCharactersList(newScript.CHARACTERS);
