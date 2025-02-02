@@ -332,7 +332,34 @@
                 textAreaInput = document.getElementById('scriptInput');
                 textAreaInputValue = textAreaInput.value;
                 if (!textAreaInputValue) {
-                    secret = prompt("Welcome to the Interactive Script Web App (Demo)!\n Paste the SECRET script data HERE! \n(or just skip. no pressure...)\n");
+                    secret = prompt("Welcome to the Interactive Script Web App (Demo)!\n Paste the SECRET script data HERE! \n(or just skip. no pressure...)\n",`{"TITLE":
+
+"BEFORE SUNRISE",
+
+"CHARACTERS":[
+"Jesse","Celine","Poet","Woman", "Man"],
+"PARTS":[{"title":"INT. TRAIN - AFTERNOON","scenes":[{"stageDirections":[
+
+"The Eurail rolls along. Inside, passengers sleep, read, and stare out the windows. A few walk up and down the aisles. CELINE, ayoung woman in her...",
+
+"Sitting four rows back and on the other side of the aisle, JESSE, also.."],"lines":[{"line":
+
+"Do you have any idea what they’re arguing about? Do you speak English?","character":
+0,"stageDirection":""},{"line":
+
+"Yes. But no, I don’t know. My German is not that good.","character":
+1,"stageDirection":""},{"line":
+
+"You have no idea where I came from\nwe have no idea where we’re going","character":
+2,"stageDirection":""},{"line":
+
+"Would you shut up for Chrissake?","character":4,"stageDirection":""},{"line":
+"You shut up! How dare you tell me to shut up!","character":
+3,"stageDirection":""}
+
+
+
+]}]}]}`)
                     if (secret)
                         textAreaInput.value = secret;
                     textAreaInput.onchange();
@@ -353,7 +380,7 @@
         function reCreateScriptContent(newScript) {
             if (newScript) {
                 newScript = JSON.parse(newScript);
-                newScript.CHARACTERS = newScript.CHARACTERS.map(character => character[0].toUpperCase() + character.slice(1).toLowerCase());
+                newScript.CHARACTERS = newScript.CHARACTERS.map(character => (character[0].toUpperCase() + character.slice(1).toLowerCase()).replaceAll(/\s/g, '_') );
                 console.log(newScript.CHARACTERS[0][0]);
                 script = newScript;
                 addTitle(newScript.TITLE);
