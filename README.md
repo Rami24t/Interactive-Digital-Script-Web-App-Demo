@@ -11,7 +11,7 @@
 
 ### Live Demo Version
 
-[rs digital script](script.ramidev.site)
+[rs digital script](https://script.ramidev.site)
 
 ### Programming Languages
 - Vanilla JavaScript
