@@ -9,9 +9,10 @@
         body {
             font-family: Helvetica, Arial, sans-serif;
             line-height: 1.6;
-            margin: 20px;
+            margin: 10px;
             background: #f4f4f4;
-            padding: 20px;
+            padding: 10px;
+            color: #444;
         }
 
         h1,
@@ -48,14 +49,15 @@
 
         .stage-direction {
             font-style: italic;
-            color: #555;
+            color: #655;
         }
 
         .script-container {
             max-width: 660px;
             margin: auto;
             background: white;
-            padding: 20px;
+            padding: 10px;
+            padding-top: 1px;
             border-radius: 10px;
         }
 
@@ -82,159 +84,293 @@
             font-size: x-large;
             color: #001;
         }
+
+        label {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            color: #3333336f;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-size: normal;
+        }
+
+        label:focus {
+            opacity: 0.8;
+        }
+
+        textarea {
+            font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            width: 40vw;
+            height: 4em;
+            background: none;
+            font-size: small;
+            border: 1px dashed #050;
+            color: transparent;
+            border-radius: 3px;
+            opacity: 0.4;
+        }
+
+        textarea:focus {
+            width: 60vw;
+            height: 8em;
+            size: 300;
+            background: #001;
+            color: #0f0;
+            border: 1px solid green;
+            border-radius: 3px;
+            opacity: 0.8;
+            font-size: normal;
+        }
+
+        p span {
+            padding: 4px 8px;
+            border-radius: 5px;
+            background-image: radial-gradient(#eee 0%, #fff 10%, #eee 50%, #ddd 90%, #bbb 99%);
+            display: inline-block;
+            box-shadow: 1px 1px 2px;
+        }
+
+        p span:nth-of-type(2) {
+            box-shadow: -200px 1px 0.5px -5px;
+        }
+
+        p span:first-of-type {
+            text-decoration: underline
+        }
     </style>
 </head>
 
 <body>
-    <h1>Interactive Script | by Rami</h1>
-    <h2>Script Title</h2>
+    <h1>Interactive Script (Demo) | by Rami</h1>
+
+    <label> Data
+        <textarea id="scriptInput" required dropzone="true" translate="no"
+            onchange="this.value && reCreateScriptContent(JSON.stringify(JSON.parse(this.value)))"
+            oninput="this.onchange()" title="Secret or script data"></textarea>
+    </label>
+    <h2 id="title">Title</h2>
 
     <div class="stage-direction">
         <p>CHARACTERS and CAST</p>
         <ul class="characters-list">
-            <!-- Character list will be populated dynamically -->
         </ul>
     </div>
 
-    <div class="script-container">
-        <!-- Parts and scenes will be populated dynamically -->
-    </div>
+    <div class="script-container"></div>
 
     <script>
-        // The data from the parsed script JSON
-        const result = {
-            TITLE: "Marjorie Prime",
-            CHARACTERS: ["MARJORIE", "WALTER", "TESS", "JOHN"],
-            PARTS: [
+
+        const SCRIPT = {
+            "TITLE": "Script Title",
+            "CHARACTERS": [
+                "CHAR1",
+                "CHAR2",
+                "CHAR3",
+                "CHAR4"
+            ],
+            "PARTS": [
                 {
-                    title: "PART ONE",
-                    scenes: [
+                    "title": "PART ONE",
+                    "scenes": [
                         {
-                            stageDirections: [
-                                "(CHARACTERS[2] and CHARACTERS[3]’s living room. On one side of the room, we can see an entryway beyond the open kitchen. On the other side, there is a hallway leading off to the unseen bedrooms.)",
-                                "(CHARACTERS[0], 85, sits in a recliner. [The lumpy chair doesn’t go with the rest of the décor – clearly it’s been added for her comfort.] CHARACTERS[0]’s visitor, CHARACTERS[1], looks like a young career man from 1998. He seems to be in his early 30s – bright-eyed and handsome in an unspectacular way.)"
+                            "stageDirections": [
+                                "Rami's ... balcony. On one side of the .................",
+                                "Ramona, 35, sits in a .... (The chair doesn't go with the rest of the decor..."
                             ],
-                            lines: [
-                                { character: "MARJORIE", line: "I feel like I have to perform around you." },
-                                { character: "WALTER", line: "Well, you don’t." },
-                                { character: "MARJORIE", line: "I know." },
-                                { character: "WALTER", line: "It’s just me, it’s just WALTER." },
-                                { character: "MARJORIE", line: "Maybe it isn’t bad, if I feel that way. (Beat.) I used to entertain a lot." },
-                                { character: "WALTER", line: "I remember." },
-                                { character: "MARJORIE", line: "You do?" },
-                                { character: "WALTER", line: "MARJORIE. Where are the dishes?" },
-                                { character: "MARJORIE", line: "The girl did them." },
-                                { character: "WALTER", line: "She doesn’t come ’til 2." },
-                                { character: "MARJORIE", line: "I did them." },
-                                { character: "WALTER", line: "You didn’t. Your arthritis." }
-                            ]
-                        },
-                        {
-                            stageDirections: [
-                                "(Same day, early evening. CHARACTERS[2], CHARACTERS[0]’s fifty-something daughter, is putting groceries in the fridge.)",
-                                "(CHARACTERS[1] might remain at the perimeter of the stage during this scene, dimly lit, sitting quietly.)"
-                            ],
-                            lines: [
-                                { character: "TESS", line: "I still don’t like it." },
-                                { character: "TESS", line: "I don’t care what Senior Serenity says." },
-                                { character: "JOHN", line: "Are you talking to me?" },
-                                { character: "TESS", line: "I’m not sure. Is that a bad sign?" },
-                                { character: "JOHN", line: "(entering) What?" }
-                            ]
-                        }
-                    ]
-                }
+                            "lines": [
+                                {
+                                    "line": "I feel like I have to...",
+                                    "character": 0,
+                                    "stageDirection": ""
+                                },
+                                {
+                                    "line": "Well you don't.",
+                                    "character": 1,
+                                    "stageDirection": ""
+                                }]
+                        }]
+                }],
+            THOUGHTS: [
+                "Thoughts paragraph 1", "Thoughts paragraph 2"]
+            ,
+            BY: "Rami\n...",
+            "COPYRIGHTS": [
+                "2025 Theatre Rami Group\nNo portion of this article can be re....",
+                "Please bookmark with social media, your votes are noticed and appreciated:"
             ]
-        };
-
-        const TITLE = result.TITLE;
-        const CHARACTERS = result.CHARACTERS;
-
-        // Add title to the page
-        function addTitle(title) {
-            document.title = title + ' Interactive Digital Script';
-            document.querySelector('body > h2').innerText = title;
         }
-        addTitle(TITLE);
+        // Add title to the page
+        function addTitle(title = SCRIPT.TITLE) {
+            document.title = title + ' Interactive Digital Script';
+            document.querySelector('#title').innerText = title;
+        }
 
-        // Populate the characters list
-        function fillCharactersList(characters) {
+        // Fill character list
+        function fillCharactersList(characters = SCRIPT.CHARACTERS) {
             const charactersList = document.querySelector('.characters-list');
+            charactersList.innerHTML = '';
             characters.forEach((character, idx) => {
                 charactersList.innerHTML +=
-                    `<li><span onclick="highlight(${idx})" class="maincharacter">${character}</span> - 
-            <span class="cast" contenteditable="true" onblur="localStorage.setItem('${character}', this.innerText); updateActorsNamesInScript();">${character}</span></li>`;
+                    `<li><span onclick="highlight(${idx})" class="maincharacter">${character}</span> - <span class="cast" contenteditable="true"
+                            onblur="localStorage.setItem('${character}', this.innerText); updateActorsNamesInScript();">${character}</span></li>`;
             });
         }
-        fillCharactersList(CHARACTERS);
 
-        // Populate the script parts and scenes
-        function fillScriptParts(parts) {
+        function highlight(character = 2, characters = SCRIPT.CHARACTERS) {
+            document.querySelectorAll('.scene p').forEach(p => {
+                p.classList.remove('highlight');
+                p.classList.remove('interaction');
+            });
+            document.querySelectorAll(`.${characters[character]}`).forEach(el => {
+                el.parentElement.classList.add('highlight');
+                el.parentElement.nextElementSibling?.classList.add('interaction');
+                el.parentElement.previousElementSibling?.classList.add('interaction');
+            });
+
+            maincharacters = document.querySelectorAll('.maincharacter');
+            maincharacters.forEach(span => span.classList.remove('highlight'));
+            maincharacters[character].classList.add('highlight');
+
+            localStorage.setItem('highlighted', character);
+        }
+
+        function loadCast(characters = SCRIPT.CHARACTERS) {
+            document.querySelectorAll('.cast').forEach((cast, idx) =>
+                cast.innerText = localStorage.getItem(characters[idx])
+                || characters[idx])
+        };
+
+        function updateActorsNamesInScript(characters = SCRIPT.CHARACTERS) {
+            characters.forEach(
+                character => document.querySelectorAll(
+                    '.character.' + character)
+                    .forEach(characterx =>
+                        characterx.innerText = character + ' (' + (localStorage.getItem(character) || character) + ')')
+            )
+        }
+
+        function fixMissingCharacterNamesBugs(characters = SCRIPT.CHARACTERS) {
+            characters.forEach((character, idx) =>
+                document.querySelectorAll('div.scene p').forEach(
+                    sceneDivP => sceneDivP.innerHTML = sceneDivP.innerHTML.replaceAll(`CHARACTERS[${idx}]`, character)))
+        }
+
+        // Create the script container dynamically
+        function createScriptContent(script = SCRIPT) {
             const scriptContainer = document.querySelector('.script-container');
-            parts.forEach(part => {
-                const partElement = document.createElement('div');
-                partElement.classList.add('part');
-                partElement.innerHTML = `<h2>${part.title}</h2>`;
 
-                part.scenes.forEach((scene, sceneIndex) => {
-                    const sceneElement = document.createElement('div');
-                    sceneElement.classList.add('scene');
-                    sceneElement.innerHTML = `<h3>${sceneIndex + 1}.</h3>`;
+            scriptContainer.innerHTML = '';
 
-                    // Stage directions
-                    scene.stageDirections.forEach(direction => {
-                        const directionElement = document.createElement('div');
-                        directionElement.classList.add('stage-direction');
-                        directionElement.innerHTML = `<p>${direction}</p>`;
-                        sceneElement.appendChild(directionElement);
-                    });
+            script.PARTS ?
+                script.PARTS.forEach(part => {
+                    const partDiv = document.createElement('div');
+                    const partTitle = document.createElement('h2');
+                    partTitle.innerText = part.title;
+                    partDiv.appendChild(partTitle);
+                    part.scenes &&
+                        part.scenes.forEach((scene, sceneIndex) => {
+                            const sceneDiv = document.createElement('div');
+                            sceneDiv.classList.add('scene');
+                            const sceneHeader = document.createElement('h3');
+                            sceneHeader.innerText = sceneIndex + 1 + '.';
+                            sceneDiv.appendChild(sceneHeader);
 
-                    // Dialogue lines
-                    scene.lines.forEach(line => {
-                        const lineElement = document.createElement('p');
-                        lineElement.innerHTML = `<span class="character ${line.character}" onclick="highlightCharacter('${line.character}')">${line.character}</span>: <span class="line">${line.line}</span>`;
-                        sceneElement.appendChild(lineElement);
-                    });
+                            // Add stage directions
+                            const stageDirectionDiv = document.createElement('div');
+                            stageDirectionDiv.classList.add('stage-direction');
+                            scene.stageDirections &&
+                                scene.stageDirections.forEach(direction => {
+                                    const stageDirectionParagraph = document.createElement('p');
+                                    stageDirectionParagraph.innerText = direction;
+                                    stageDirectionDiv.appendChild(stageDirectionParagraph);
+                                });
+                            sceneDiv.appendChild(stageDirectionDiv);
 
-                    partElement.appendChild(sceneElement);
-                });
+                            // Add lines (dialogues)
+                            scene.lines &&
+                                scene.lines.forEach(line => {
+                                    const lineParagraph = document.createElement('p');
+                                    const characterSpan = document.createElement('span');
+                                    characterSpan.classList.add('character', script.CHARACTERS[line.character]);
+                                    characterSpan.innerText = script.CHARACTERS[line.character] || '';
+                                    characterSpan.setAttribute("onclick", "highlight(" + line.character + "," + JSON.stringify(script.CHARACTERS) + ")");
+                                    const lineSpan = document.createElement('span');
+                                    lineSpan.classList.add('line');
+                                    lineSpan.innerText = '' + (!line.stageDirection ? '' : '(' + line.stageDirection + ') ') + line.line;
 
-                scriptContainer.appendChild(partElement);
-            });
+                                    lineParagraph.appendChild(characterSpan);
+                                    lineParagraph.appendChild(lineSpan);
+                                    sceneDiv.appendChild(lineParagraph);
+                                });
+
+                            partDiv.appendChild(sceneDiv);
+                        });
+
+                    scriptContainer.appendChild(partDiv);
+                })
+                : script.PARTS = [];
         }
-        fillScriptParts(result.PARTS);
 
-        // Highlight the selected character
-        function highlightCharacter(character) {
-            const characterElements = document.querySelectorAll(`.character.${character}`);
-            characterElements.forEach(el => {
-                el.classList.toggle('highlight');
-            });
-        }
+        let script = SCRIPT || {};
 
-        // Update actors' names in the script based on input
-        function updateActorsNamesInScript() {
-            CHARACTERS.forEach(character => {
-                document.querySelectorAll(`.character.${character}`).forEach(characterElement => {
-                    characterElement.innerText = localStorage.getItem(character) || character;
-                });
-            });
-        }
+        // Load the saved script
 
-        // Ensure the script uses saved names if available
-        function loadSavedNames() {
-            CHARACTERS.forEach(character => {
-                const savedName = localStorage.getItem(character);
-                if (savedName) {
-                    document.querySelectorAll(`.character.${character}`).forEach(el => {
-                        el.innerText = savedName;
-                    });
+        function loadScriptObject(savedScriptObject = localStorage.getItem('scriptObject') || '') {
+            // function pasteIntoScriptInput(textToPaste = window.clipboardData && window.clipboardData.getData("Text").trim()) {
+            //     if (textToPaste?.PARTS && !savedScriptObject)
+            //         document.getElementById('scriptInput').value = textToPaste;
+            // }
+
+            savedScriptObject = savedScriptObject.trim() || '';
+            if (savedScriptObject) {
+                savedScriptObject = JSON.parse(savedScriptObject);
+                script = savedScriptObject;
+            }
+            else {
+                textAreaInput = document.getElementById('scriptInput');
+                textAreaInputValue = textAreaInput.value;
+                if (!textAreaInputValue) {
+                    secret = prompt("Welcome to the Interactive Script Web App (Demo)!\n Paste the SECRET script data HERE! \n(or just skip. no pressure...)\n");
+                    if (secret)
+                        textAreaInput.value = secret;
+                    textAreaInput.onchange();
                 }
-            });
+            }
         }
-        loadSavedNames();
-    </script>
+        loadScriptObject();
 
+
+        addTitle(script.TITLE);
+        fillCharactersList(script.CHARACTERS);
+        createScriptContent(script);
+        highlight(localStorage.getItem('highlighted') || 3, script.CHARACTERS);
+        loadCast(script.CHARACTERS);
+        updateActorsNamesInScript(script.CHARACTERS);
+        // fixMissingCharacterNamesBugs(script.CHARACTERS);
+
+        function reCreateScriptContent(newScript) {
+            if (newScript) {
+                newScript = JSON.parse(newScript);
+                newScript.CHARACTERS = newScript.CHARACTERS.map(character => character[0].toUpperCase() + character.slice(1).toLowerCase());
+                console.log(newScript.CHARACTERS[0][0]);
+                script = newScript;
+                addTitle(newScript.TITLE);
+                fillCharactersList(newScript.CHARACTERS);
+                createScriptContent(newScript);
+                highlight(localStorage.getItem('highlighted') || 3, newScript.CHARACTERS);
+                loadCast(newScript.CHARACTERS);
+                updateActorsNamesInScript(newScript.CHARACTERS);
+                // fixMissingCharacterNamesBugs(script.CHARACTERS);
+                localStorage.setItem('scriptObject', JSON.stringify(newScript));
+            }
+        }
+        function titleSpans() {
+            document.querySelectorAll('span').forEach(span => span.title = span.textContent)
+        }
+        titleSpans();
+
+    </script>
 </body>
 
 </html>
