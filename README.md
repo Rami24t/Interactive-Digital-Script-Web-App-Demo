@@ -9,6 +9,9 @@
 
 ![Screenshot_2025-02-02-19-45-42](https://github.com/user-attachments/assets/8b7c8945-9f41-4ae2-8d63-63547f0fa288)
 
+![Screenshot_2025-02-02-20-31-02](https://github.com/user-attachments/assets/369d3fe7-260f-4130-b636-39d0ebe92424)
+
+
 ### Live Demo Version
 
 [rs digital script](https://script.ramidev.site)
