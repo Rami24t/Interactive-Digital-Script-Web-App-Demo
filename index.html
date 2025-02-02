@@ -38,6 +38,17 @@
             text-transform: capitalize;
         }
 
+        .cast {
+            font-family: 'Lucida Grande', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .cast:focus {
+            display: inline-block;
+            transform: scale(1.1);
+        }
+
         .interaction .character {
             color: #070;
         }
@@ -89,7 +100,7 @@
         label {
             display: flex;
             align-items: center;
-            justify-content:end;
+            justify-content: end;
             gap: 12px;
             color: #3333336f;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -163,34 +174,18 @@
     <script>
 
         const SCRIPT = {
-            "TITLE": "Script Title",
-            "CHARACTERS": [
-                "CHAR1",
-                "CHAR2",
-                "CHAR3",
-                "CHAR4"
-            ],
-            "PARTS": [
-                {
-                    "title": "PART ONE",
-                    "scenes": [
-                        {
-                            "stageDirections": [
-                                "Rami's ... balcony. On one side of the .................",
-                                "Ramona, 35, sits in a .... (The chair doesn't go with the rest of the decor..."
-                            ],
-                            "lines": [
-                                {
-                                    "line": "I feel like I have to...",
-                                    "character": 0,
-                                    "stageDirection": ""
-                                },
-                                {
-                                    "line": "Well you don't.",
-                                    "character": 1,
-                                    "stageDirection": ""
-                                }]
-                        }]
+            "TITLE":
+                "BEFORE SUNRISE", "CHARACTERS": ["Jesse", "Celine", "Poet", "Woman", "Man"], "PARTS": [{
+                    "title": "INT. TRAIN - AFTERNOON", "scenes": [{
+                        "stageDirections":
+                            ["The Eurail rolls along. Inside, passengers sleep, read, and stare out the windows. A few walk up and down the aisles. CELINE, a young woman in her...", "Sitting four rows back and on the other side of the aisle, JESSE, also.."],
+                        "lines": [{ "line": "Do you have any idea what they’re arguing about? Do you speak English?", "character": 0, "stageDirection": "" },
+                        { "line": "Yes. But no, I don’t know. My German is not that good.", "character": 1, "stageDirection": "" },
+                        { "line": "There’s a slightly awkward moment where they don’t know if they should continue talking or not." },
+                        { "line": "You have no idea where I came fromwe have no idea where we’re going", "character": 2, "stageDirection": "" },
+                        { "line": "Would you shut up for Chrissake?", "character": 4, "stageDirection": "" },
+                        { "line": "You shut up! How dare you tell me to shut up!", "character": 3, "stageDirection": "" }]
+                    }]
                 }],
             THOUGHTS: [
                 "Thoughts paragraph 1", "Thoughts paragraph 2"]
@@ -213,8 +208,11 @@
             charactersList.innerHTML = '';
             characters.forEach((character, idx) => {
                 charactersList.innerHTML +=
-                    `<li><span onclick="highlight(${idx})" class="maincharacter">${character}</span> - <span class="cast" contenteditable="true"
-                            onblur="localStorage.setItem('${character}', this.innerText); updateActorsNamesInScript();">${character}</span></li>`;
+                    `<li>
+                        <span onclick="highlight(${idx})" 
+                        class="maincharacter">${character}</span> - 
+                        <span class="cast" contenteditable="true" onblur="this.innerText = sanitize(this.innerText); this.innerText && localStorage.setItem('${character}', sanitize(this.innerText));
+                        updateActorsNamesInScript();"> ${character}</span></li>`;
             });
         }
 
@@ -332,34 +330,7 @@
                 textAreaInput = document.getElementById('scriptInput');
                 textAreaInputValue = textAreaInput.value;
                 if (!textAreaInputValue) {
-                    secret = prompt("Welcome to the Interactive Script Web App (Demo)!\n Paste the SECRET script data HERE! \n(or just skip. no pressure...)\n",`{"TITLE":
-
-"BEFORE SUNRISE",
-
-"CHARACTERS":[
-"Jesse","Celine","Poet","Woman", "Man"],
-"PARTS":[{"title":"INT. TRAIN - AFTERNOON","scenes":[{"stageDirections":[
-
-"The Eurail rolls along. Inside, passengers sleep, read, and stare out the windows. A few walk up and down the aisles. CELINE, ayoung woman in her...",
-
-"Sitting four rows back and on the other side of the aisle, JESSE, also.."],"lines":[{"line":
-
-"Do you have any idea what they’re arguing about? Do you speak English?","character":
-0,"stageDirection":""},{"line":
-
-"Yes. But no, I don’t know. My German is not that good.","character":
-1,"stageDirection":""},{"line":
-
-"You have no idea where I came from\nwe have no idea where we’re going","character":
-2,"stageDirection":""},{"line":
-
-"Would you shut up for Chrissake?","character":4,"stageDirection":""},{"line":
-"You shut up! How dare you tell me to shut up!","character":
-3,"stageDirection":""}
-
-
-
-]}]}]}`)
+                    secret = prompt("Welcome to the Interactive Script Web App (Demo)!\n Paste the SECRET script data HERE! \n(or just skip. no pressure...)\n");
                     if (secret)
                         textAreaInput.value = secret;
                     textAreaInput.onchange();
@@ -372,26 +343,30 @@
         addTitle(script.TITLE);
         fillCharactersList(script.CHARACTERS);
         createScriptContent(script);
-        highlight(localStorage.getItem('highlighted') || 3, script.CHARACTERS);
+        highlight(localStorage.getItem('highlighted') || 0, script.CHARACTERS);
         loadCast(script.CHARACTERS);
         updateActorsNamesInScript(script.CHARACTERS);
         // fixMissingCharacterNamesBugs(script.CHARACTERS);
 
+        function sanitize(str = "") {
+            return str.trim().replaceAll(/[^\w\s]+|_+/g, "_").replaceAll(/\s+/g, "_");
+        }
+
         function reCreateScriptContent(newScript) {
-            if (newScript) {
-                newScript = JSON.parse(newScript);
-                newScript.CHARACTERS = newScript.CHARACTERS.map(character => (character[0].toUpperCase() + character.slice(1).toLowerCase()).replaceAll(/\s/g, '_') );
-                console.log(newScript.CHARACTERS[0][0]);
-                script = newScript;
-                addTitle(newScript.TITLE);
-                fillCharactersList(newScript.CHARACTERS);
-                createScriptContent(newScript);
-                highlight(localStorage.getItem('highlighted') || 3, newScript.CHARACTERS);
-                loadCast(newScript.CHARACTERS);
-                updateActorsNamesInScript(newScript.CHARACTERS);
-                // fixMissingCharacterNamesBugs(script.CHARACTERS);
-                localStorage.setItem('scriptObject', JSON.stringify(newScript));
-            }
+        if (newScript) {
+            newScript = JSON.parse(newScript);
+            newScript.CHARACTERS = newScript.CHARACTERS.map(character => (character[0].toUpperCase() + character.slice(1).toLowerCase()).replaceAll(/\s/g, '_'));
+            console.log(newScript.CHARACTERS[0][0]);
+            script = newScript;
+            addTitle(newScript.TITLE);
+            fillCharactersList(newScript.CHARACTERS);
+            createScriptContent(newScript);
+            highlight(localStorage.getItem('highlighted') || 3, newScript.CHARACTERS);
+            loadCast(newScript.CHARACTERS);
+            updateActorsNamesInScript(newScript.CHARACTERS);
+            // fixMissingCharacterNamesBugs(script.CHARACTERS);
+            localStorage.setItem('scriptObject', JSON.stringify(newScript));
+        }
         }
         function titleSpans() {
             document.querySelectorAll('span').forEach(span => span.title = span.textContent)
