@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Script</title>
+    <style>
+        .highlight {
+            background-color: yellow;
+        }
+
+        .interaction {
+            font-style: italic;
+        }
+
+        .characters-list li {
+            list-style-type: none;
+        }
+
+        .character {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .stage-direction {
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .cast {
+            color: gray;
+        }
+
+        .maincharacter {
+            color: blue;
+        }
+
+        .script-container {
+            margin: 20px 0;
+        }
+
+        .scene {
+            margin-bottom: 20px;
+        }
+
+        .scene h3 {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Interactive Script | by Rami</h1>
+<h2></h2> <!-- Will be populated dynamically -->
+
+<div class="stage-direction">
+    <p>CHARACTERS and CAST</p>
+    <ul class="characters-list">
+        <!-- Character list will be populated dynamically -->
+    </ul>
+</div>
+
+<div class="script-container">
+    <!-- Parts and scenes will be populated dynamically -->
+</div>
+
+<script>
+// The data from the parsed script JSON
+const result = {
+    TITLE: "Marjorie Prime",
+    CHARACTERS: ["MARJORIE", "WALTER", "TESS", "JOHN"],
+    PARTS: [
+        {
+            title: "PART ONE",
+            scenes: [
+                {
+                    stageDirections: [
+                        "(CHARACTERS[2] and CHARACTERS[3]’s living room. On one side of the room, we can see an entryway beyond the open kitchen. On the other side, there is a hallway leading off to the unseen bedrooms.)",
+                        "(CHARACTERS[0], 85, sits in a recliner. [The lumpy chair doesn’t go with the rest of the décor – clearly it’s been added for her comfort.] CHARACTERS[0]’s visitor, CHARACTERS[1], looks like a young career man from 1998. He seems to be in his early 30s – bright-eyed and handsome in an unspectacular way.)"
+                    ],
+                    lines: [
+                        { character: "MARJORIE", line: "I feel like I have to perform around you." },
+                        { character: "WALTER", line: "Well, you don’t." },
+                        { character: "MARJORIE", line: "I know." },
+                        { character: "WALTER", line: "It’s just me, it’s just WALTER." },
+                        { character: "MARJORIE", line: "Maybe it isn’t bad, if I feel that way. (Beat.) I used to entertain a lot." },
+                        { character: "WALTER", line: "I remember." },
+                        { character: "MARJORIE", line: "You do?" },
+                        { character: "WALTER", line: "MARJORIE. Where are the dishes?" },
+                        { character: "MARJORIE", line: "The girl did them." },
+                        { character: "WALTER", line: "She doesn’t come ’til 2." },
+                        { character: "MARJORIE", line: "I did them." },
+                        { character: "WALTER", line: "You didn’t. Your arthritis." }
+                    ]
+                },
+                {
+                    stageDirections: [
+                        "(Same day, early evening. CHARACTERS[2], CHARACTERS[0]’s fifty-something daughter, is putting groceries in the fridge.)",
+                        "(CHARACTERS[1] might remain at the perimeter of the stage during this scene, dimly lit, sitting quietly.)"
+                    ],
+                    lines: [
+                        { character: "TESS", line: "I still don’t like it." },
+                        { character: "TESS", line: "I don’t care what Senior Serenity says." },
+                        { character: "JOHN", line: "Are you talking to me?" },
+                        { character: "TESS", line: "I’m not sure. Is that a bad sign?" },
+                        { character: "JOHN", line: "(entering) What?" }
+                    ]
+                }
+            ]
+        }
+    ]
+};
+
+const TITLE = result.TITLE;
+const CHARACTERS = result.CHARACTERS;
+
+// Add title to the page
+function addTitle(title) {
+    document.title = title + ' Interactive Digital Script';
+    document.querySelector('body > h2').innerText = title;
+}
+addTitle(TITLE);
+
+// Populate the characters list
+function fillCharactersList(characters) {
+    const charactersList = document.querySelector('.characters-list');
+    characters.forEach((character, idx) => {
+        charactersList.innerHTML +=
+            `<li><span onclick="highlight(${idx})" class="maincharacter">${character}</span> - 
+            <span class="cast" contenteditable="true" onblur="localStorage.setItem('${character}', this.innerText); updateActorsNamesInScript();">${character}</span></li>`;
+    });
+}
+fillCharactersList(CHARACTERS);
+
+// Populate the script parts and scenes
+function fillScriptParts(parts) {
+    const scriptContainer = document.querySelector('.script-container');
+    parts.forEach(part => {
+        const partElement = document.createElement('div');
+        partElement.classList.add('part');
+        partElement.innerHTML = `<h2>${part.title}</h2>`;
+
+        part.scenes.forEach((scene, sceneIndex) => {
+            const sceneElement = document.createElement('div');
+            sceneElement.classList.add('scene');
+            sceneElement.innerHTML = `<h3>${sceneIndex + 1}.</h3>`;
+
+            // Stage directions
+            scene.stageDirections.forEach(direction => {
+                const directionElement = document.createElement('div');
+                directionElement.classList.add('stage-direction');
+                directionElement.innerHTML = `<p>${direction}</p>`;
+                sceneElement.appendChild(directionElement);
+            });
+
+            // Dialogue lines
+            scene.lines.forEach(line => {
+                const lineElement = document.createElement('p');
+                lineElement.innerHTML = `<span class="character ${line.character}" onclick="highlightCharacter('${line.character}')">${line.character}</span>: <span class="line">${line.line}</span>`;
+                sceneElement.appendChild(lineElement);
+            });
+
+            partElement.appendChild(sceneElement);
+        });
+
+        scriptContainer.appendChild(partElement);
+    });
+}
+fillScriptParts(result.PARTS);
+
+// Highlight the selected character
+function highlightCharacter(character) {
+    const characterElements = document.querySelectorAll(`.character.${character}`);
+    characterElements.forEach(el => {
+        el.classList.toggle('highlight');
+    });
+}
+
+// Update actors' names in the script based on input
+function updateActorsNamesInScript() {
+    CHARACTERS.forEach(character => {
+        document.querySelectorAll(`.character.${character}`).forEach(characterElement => {
+            characterElement.innerText = localStorage.getItem(character) || character;
+        });
+    });
+}
+
+// Ensure the script uses saved names if available
+function loadSavedNames() {
+    CHARACTERS.forEach(character => {
+        const savedName = localStorage.getItem(character);
+        if (savedName) {
+            document.querySelectorAll(`.character.${character}`).forEach(el => {
+                el.innerText = savedName;
+            });
+        }
+    });
+}
+loadSavedNames();
+</script>
+
+</body>
+</html>
