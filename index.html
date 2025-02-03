@@ -290,9 +290,9 @@
                                 scene.lines.forEach(line => {
                                     const lineParagraph = document.createElement('p');
                                     const characterSpan = document.createElement('span');
-                                    characterSpan.classList.add('character', script.CHARACTERS[line.character]);
+                                    characterSpan.classList.add('character', script.CHARACTERS[line.character] || '');
                                     characterSpan.innerText = script.CHARACTERS[line.character] || '';
-                                    characterSpan.setAttribute("onclick", "highlight(" + line.character + "," + JSON.stringify(script.CHARACTERS) + ")");
+                                    line.character && characterSpan.setAttribute("onclick", "highlight(" + line.character + "," + JSON.stringify(script.CHARACTERS) + ")");
                                     const lineSpan = document.createElement('span');
                                     lineSpan.classList.add('line');
                                     lineSpan.innerText = '' + (!line.stageDirection ? '' : '(' + line.stageDirection + ') ') + line.line;
