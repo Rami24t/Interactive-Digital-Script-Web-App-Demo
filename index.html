@@ -64,7 +64,7 @@
             color: #655;
         }
 
-        .script-container {
+        .play-container {
             max-width: 660px;
             margin: auto;
             background: white;
@@ -150,6 +150,27 @@
         p span:first-of-type {
             text-decoration: underline
         }
+
+
+        .thoughts-container {
+            max-width: 660px;
+            margin: auto;
+            background: white;
+            padding: 10px;
+            padding-top: 1px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .thoughts-content {
+            font-style: italic;
+            color: #655;
+            line-height: 1.6;
+        }
+
+        .thoughts-content p {
+            margin: 10px 0;
+        }
     </style>
 </head>
 
@@ -169,7 +190,12 @@
         </ul>
     </div>
 
-    <div class="script-container"></div>
+    <div class="play-container">
+    </div>
+    <div class="thoughts-container">
+        <h2>Thoughts</h2>
+        <div class="thoughts-content"></div>
+    </div>
 
     <script>
 
@@ -256,7 +282,7 @@
 
         // Create the script container dynamically
         function createScriptContent(script = SCRIPT) {
-            const scriptContainer = document.querySelector('.script-container');
+            const scriptContainer = document.querySelector('.play-container');
 
             scriptContainer.innerHTML = '';
 
@@ -290,11 +316,17 @@
                                 scene.lines.forEach(line => {
                                     const lineParagraph = document.createElement('p');
                                     const characterSpan = document.createElement('span');
-                                    characterSpan.classList.add('character', script.CHARACTERS[line.character] || '');
-                                    characterSpan.innerText = script.CHARACTERS[line.character] || '';
-                                    line.character && characterSpan.setAttribute("onclick", "highlight(" + line.character + "," + JSON.stringify(script.CHARACTERS) + ")");
+                                    characterSpan.classList.add('character', script.CHARACTERS[line.character] || 'stage-direction');
+                                    characterSpan.innerText = script.CHARACTERS[line.character] || 'Directions';
+                                    script.CHARACTERS[line.character] ? characterSpan.setAttribute("onclick", "highlight(" + line.character + "," + JSON.stringify(script.CHARACTERS) + ")") :
+                                    characterSpan.style.opacity = "0.2";
                                     const lineSpan = document.createElement('span');
                                     lineSpan.classList.add('line');
+                                    // if(!script.CHARACTERS[line.character])
+                                    // {
+                                    //     line.stageDirection = line.line;
+                                    //     line.line = '';
+                                    // }
                                     lineSpan.innerText = '' + (!line.stageDirection ? '' : '(' + line.stageDirection + ') ') + line.line;
 
                                     lineParagraph.appendChild(characterSpan);
@@ -308,6 +340,19 @@
                     scriptContainer.appendChild(partDiv);
                 })
                 : script.PARTS = [];
+            const createThoughtsContent = () => {
+                const thoughtsContainer = document.querySelector('.thoughts-content');
+                thoughtsContainer.innerHTML = '';
+
+                if (script.THOUGHTS) {
+                    script.THOUGHTS.forEach(thought => {
+                        const thoughtParagraph = document.createElement('p');
+                        thoughtParagraph.innerText = thought;
+                        thoughtsContainer.appendChild(thoughtParagraph);
+                    });
+                }
+            }
+            // createThoughtsContent();
         }
 
         let script = SCRIPT || {};
@@ -352,19 +397,19 @@
         }
 
         function reCreateScriptContent(newScript) {
-        if (newScript) {
-            newScript = JSON.parse(newScript);
-            newScript.CHARACTERS = newScript.CHARACTERS.map(character => (character[0].toUpperCase() + character.slice(1).toLowerCase()).replaceAll(/\s/g, '_'));
-            script = newScript;
-            addTitle(newScript.TITLE);
-            fillCharactersList(newScript.CHARACTERS);
-            createScriptContent(newScript);
-            highlight(localStorage.getItem('highlighted') || 3, newScript.CHARACTERS);
-            loadCast(newScript.CHARACTERS);
-            updateActorsNamesInScript(newScript.CHARACTERS);
-            // fixMissingCharacterNamesBugs(script.CHARACTERS);
-            localStorage.setItem('scriptObject', JSON.stringify(newScript));
-        }
+            if (newScript) {
+                newScript = JSON.parse(newScript);
+                newScript.CHARACTERS = newScript.CHARACTERS.map(character => (character[0].toUpperCase() + character.slice(1).toLowerCase()).replaceAll(/\s/g, '_'));
+                script = newScript;
+                addTitle(newScript.TITLE);
+                fillCharactersList(newScript.CHARACTERS);
+                createScriptContent(newScript);
+                highlight(localStorage.getItem('highlighted') || 3, newScript.CHARACTERS);
+                loadCast(newScript.CHARACTERS);
+                updateActorsNamesInScript(newScript.CHARACTERS);
+                // fixMissingCharacterNamesBugs(script.CHARACTERS);
+                localStorage.setItem('scriptObject', JSON.stringify(newScript));
+            }
         }
         function titleSpans() {
             document.querySelectorAll('span').forEach(span => span.title = span.textContent)
