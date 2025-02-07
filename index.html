@@ -15,6 +15,37 @@
             color: #444;
         }
 
+        #navBar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: none;
+            padding: 0px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        #navBar button {
+            background: rgb(245, 245, 245);
+            border: none;
+            font-size: 1.3em;
+            cursor: pointer;
+            box-shadow: none;
+            padding: 4px 0px !important;
+            margin: 0 -10px;
+            opacity: 0.7;
+            z-index: 99;
+            pointer-events: painted;
+        }
+
+        /* #sceneIndicator {
+            font-weight: bold;
+            color: #333;
+        } */
+
         h1,
         h2 {
             color: #333;
@@ -23,7 +54,7 @@
 
         h3 {
             color: #555;
-            /* text-align: end; */
+            /* text-align: center; */
         }
 
         /*.characters-list {
@@ -97,6 +128,12 @@
             margin-top: 20px;
             padding-top: 10px;
             border-top: 2px solid #ccc;
+        }
+
+        .scene h3 {
+            padding-left: 38px;
+            padding-top: 6px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .interaction .line {
@@ -221,6 +258,13 @@
             oninput="this.onchange()" title="Secret or script data"></textarea>
 
     </label>
+
+    <nav id="navBar">
+        <button id="prevScene" onclick="navigateScenes(-1)">⬅️</button>
+        <!-- <span id="sceneIndicator">Scene 1</span> -->
+        <button id="nextScene" onclick="navigateScenes(1)">➡️</button>
+    </nav>
+
     <h2 id="title">Title</h2>
 
     <div class="stage-direction">
@@ -320,6 +364,7 @@
             const playContainer = document.querySelector('.play-container');
 
             playContainer.innerHTML = '';
+            let playSceneCount = 0;
 
             script.PARTS ?
                 script.PARTS.forEach((part, partIndex) => {
@@ -329,11 +374,12 @@
                     partDiv.appendChild(partTitle);
                     part.scenes &&
                         part.scenes.forEach((scene, sceneIndex) => {
+                            playSceneCount++;
                             const sceneDiv = document.createElement('div');
                             sceneDiv.classList.add('scene');
                             sceneDiv.id = `scene-${partIndex}-${sceneIndex}`;
                             const sceneHeader = document.createElement('h3');
-                            sceneHeader.innerText = (partIndex + 1) + '.' + (sceneIndex + 1) + '';
+                            sceneHeader.innerText = (partIndex + 1) + (part.scenes.length > 1 ? '.' + (sceneIndex + 1) : '') + ': Scene ' + playSceneCount;
                             sceneDiv.appendChild(sceneHeader);
 
                             // Add stage directions
@@ -483,6 +529,47 @@
         }
         titleSpans();
 
+        function navigateScenes(direction = 1, currentSceneIndex = +localStorage.getItem('sceneIndex')) {
+            currentSceneIndex = currentSceneIndex || 0;
+            const scenes = document.querySelectorAll('.scene > h3:first-of-type');
+            currentSceneIndex += direction;
+
+            if (currentSceneIndex < 0) {
+                currentSceneIndex = 0;
+            } else if (currentSceneIndex >= scenes.length) {
+                currentSceneIndex = scenes.length - 1;
+            }
+
+            scenes[currentSceneIndex].scrollIntoView({ behavior: 'smooth' });
+            localStorage.setItem('sceneIndex', currentSceneIndex);
+            // updateSceneIndicator(currentSceneIndex);
+        }
+        // function updateSceneIndicator(currentSceneIndex) {
+        // const sceneIndicator = document.getElementById('sceneIndicator');
+        // sceneIndicator.innerText = currentSceneIndex == document.querySelectorAll('.scene').length - 1 ? "END OF PLAY" : `Scene ${currentSceneIndex + 1}`;
+        // }
+        // updateSceneIndicator(+localStorage.getItem('sceneIndex') || 0);
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        });
+        document.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                // Horizontal swipe
+                if (deltaX > 0) {
+                    navigateScenes(1); // previous scene
+                } else {
+                    navigateScenes(-1); // next scene
+                }
+            }
+        });
     </script>
 </body>
 
