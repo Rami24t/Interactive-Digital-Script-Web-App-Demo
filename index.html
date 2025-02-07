@@ -41,6 +41,7 @@
             pointer-events: painted;
             border-radius: 1px;
         }
+
         #navBar button:hover {
             opacity: 0.6;
         }
@@ -265,11 +266,10 @@
     </label>
 
     <nav id="navBar">
-        <button id="prevScene" onclick="navigateScenes(1)">⬅️</button>
+        <button id="prevScene" onclick="navigateScenes(-1)">⬅️</button>
         <!-- <span id="sceneIndicator">Scene 1</span> -->
-        <button id="nextScene" onclick="navigateScenes(+1)">➡️</button>
+        <button id="nextScene" onclick="navigateScenes(1)">➡️</button>
     </nav>
-
     <h2 id="title">Title</h2>
 
     <div class="stage-direction">
@@ -535,7 +535,7 @@
         titleSpans();
 
         function navigateScenes(direction = 1, currentSceneIndex = +localStorage.getItem('sceneIndex')) {
-            currentSceneIndex = currentSceneIndex || 0;
+            currentSceneIndex = Number(currentSceneIndex) || 0;
             const scenes = document.querySelectorAll('.scene > h3:first-of-type');
             currentSceneIndex += direction;
 
@@ -569,9 +569,9 @@
             if (Math.abs(deltaX) > Math.abs(deltaY)) {
                 // Horizontal swipe
                 if (deltaX > 0) {
-                    navigateScenes(1); // previous scene
+                    navigateScenes(-1); // previous scene
                 } else {
-                    navigateScenes(-1); // next scene
+                    navigateScenes(1); // next scene
                 }
             }
         });
