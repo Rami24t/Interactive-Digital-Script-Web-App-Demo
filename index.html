@@ -208,10 +208,10 @@
             onchange="readJSONInputFile(this.files[0], text => {const scriptInput = document.getElementById('scriptInput'); scriptInput.value = text; scriptInput.onchange();} );"
             hidden>
         <button onclick="document.getElementById('fileInput').click()">Load</button>
-        <!-- <button onclick="localStorage.clear();
+        <button onclick="localStorage.clear();
         document.getElementById('scriptInput').value = '';
         location.reload();
-        ">Reset</button> -->
+        ">Reset</button>
         <!-- <button
             onclick="document.getElementById('scriptInput').value = JSON.stringify(script); document.getElementById('scriptInput').focus()">Edit</button> -->
         <textarea id="scriptInput" required dropzone="true" translate="no"
