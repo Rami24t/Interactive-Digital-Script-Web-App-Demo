@@ -194,7 +194,7 @@
     <h1>Interactive Script | by Rami (Demo)</h1>
 
     <label aria-hidden="true"> Data
-        <input type="file" id="fileInput" accept=".json"
+        <input type="file" id="fileInput" accept=".iscript"
             onchange="readJSONInputFile(this.files[0], text => {const scriptInput = document.getElementById('scriptInput'); scriptInput.value = text; scriptInput.onchange();} );"
             hidden>
         <button onclick="document.getElementById('fileInput').click()">Load</button>
