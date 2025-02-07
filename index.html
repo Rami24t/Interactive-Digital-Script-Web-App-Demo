@@ -425,7 +425,8 @@
                 textAreaInput = document.getElementById('scriptInput');
                 textAreaInputValue = textAreaInput.value;
                 if (!textAreaInputValue) {
-                    window.alert("Welcome to the Interactive Script Web App (Demo)!\n\n If we sent you an .iscript file, then you can activate it by clicking the Data 'Load' button.\n\n(or not. no pressure...)\n");
+                    window.alert("Welcome to the Interactive Script Web App (Demo)!\n\n If we sent you an .iscript file, then you can activate it by clicking the Load button.\n\nWarning: Never use files from unknown sources.\n"
+                    , "Welcome!");
                     document.getElementById('fileInput').click();
                     document.querySelector('button').click();
                 }
