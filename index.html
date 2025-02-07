@@ -150,7 +150,7 @@
             transition: all 0.5s;
         }
 
-        textarea:focus{
+        textarea:focus {
             width: 60vw;
             height: 8em;
             size: 300;
@@ -218,8 +218,7 @@
             onclick="document.getElementById('scriptInput').value = JSON.stringify(script); document.getElementById('scriptInput').focus()">Edit</button> -->
         <textarea id="scriptInput" required dropzone="true" translate="no"
             onchange="this.value && reCreateScriptContent(JSON.stringify(JSON.parse(this.value)))"
-            oninput="this.onchange()" title="Secret or script data"
-            ></textarea>
+            oninput="this.onchange()" title="Secret or script data"></textarea>
 
     </label>
     <h2 id="title">Title</h2>
@@ -323,7 +322,7 @@
             playContainer.innerHTML = '';
 
             script.PARTS ?
-                script.PARTS.forEach(part => {
+                script.PARTS.forEach((part, partIndex) => {
                     const partDiv = document.createElement('div');
                     const partTitle = document.createElement('h2');
                     partTitle.innerText = part.title;
@@ -332,8 +331,9 @@
                         part.scenes.forEach((scene, sceneIndex) => {
                             const sceneDiv = document.createElement('div');
                             sceneDiv.classList.add('scene');
+                            sceneDiv.id = `scene-${partIndex}-${sceneIndex}`;
                             const sceneHeader = document.createElement('h3');
-                            sceneHeader.innerText = sceneIndex + 1 + '';
+                            sceneHeader.innerText = (partIndex + 1) + '.' + (sceneIndex + 1) + '';
                             sceneDiv.appendChild(sceneHeader);
 
                             // Add stage directions
@@ -428,7 +428,7 @@
                 textAreaInputValue = textAreaInput.value;
                 if (!textAreaInputValue) {
                     window.alert("Welcome to the Interactive Script Web App (Demo)!\n\n If we sent you an .iscript file, then you can activate it by clicking the Load button.\n\nWarning: Never use files from unknown sources.\n"
-                    , "Welcome!");
+                        , "Welcome!");
                     document.getElementById('fileInput').click();
                     document.querySelector('button').click();
                 }
