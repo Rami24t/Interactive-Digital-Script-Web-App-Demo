@@ -20,14 +20,15 @@
             color: #333;
             text-align: center;
         }
+
         h3 {
             color: #555;
             /* text-align: end; */
         }
 
-        .characters-list {
-            /* list-style: none; */
-        }
+        /*.characters-list {
+            list-style: none; 
+        }*/
         .maincharacter {
             font-weight: bold;
             text-transform: uppercase;
@@ -73,7 +74,8 @@
             margin: auto;
             /* text-align: end; */
         }
-        .stage-direction p{
+
+        .stage-direction p {
             text-align: center;
         }
 
@@ -192,9 +194,17 @@
     <h1>Interactive Script | by Rami (Demo)</h1>
 
     <label aria-hidden="true"> Data
+        <input type="file" id="fileInput" accept=".json"
+            onchange="readJSONInputFile(this.files[0], text => {const scriptInput = document.getElementById('scriptInput'); scriptInput.value = text; scriptInput.onchange();} );"
+            hidden>
+        <button onclick="document.getElementById('fileInput').click()">Load</button>
+        <!-- <button onclick="localStorage.removeItem('scriptObject'); location.reload()">Reset</button> -->
+        <button
+            onclick="document.getElementById('scriptInput').value = JSON.stringify(script); document.getElementById('scriptInput').focus()">Edit</button>
         <textarea id="scriptInput" required dropzone="true" translate="no"
             onchange="this.value && reCreateScriptContent(JSON.stringify(JSON.parse(this.value)))"
             oninput="this.onchange()" title="Secret or script data"></textarea>
+
     </label>
     <h2 id="title">Title</h2>
 
@@ -419,8 +429,20 @@
         updateActorsNamesInScript(script.CHARACTERS);
         // fixMissingCharacterNamesBugs(script.CHARACTERS);
 
+        // Helper functions
         function sanitize(str = "") {
             return str.trim().replaceAll(/[^\w\s]+|_+/g, "_").replaceAll(/\s+/g, "_");
+        }
+
+        function readJSONInputFile(inputFile, callback) {
+            const file = URL.createObjectURL(inputFile);
+            const rawFile = new XMLHttpRequest(); rawFile.overrideMimeType("application/json");
+            rawFile.open("GET", file, true);
+            rawFile.onreadystatechange = function () {
+                if (rawFile.readyState === 4 && rawFile.status == "200")
+                    callback(rawFile.responseText);
+            }
+            rawFile.send(null);
         }
 
         function reCreateScriptContent(newScript) {
@@ -438,6 +460,8 @@
                 localStorage.setItem('scriptObject', JSON.stringify(newScript));
             }
         }
+
+        // Adds title attribute to all spans
         function titleSpans() {
             document.querySelectorAll('span').forEach(span => span.title = span.textContent)
         }
