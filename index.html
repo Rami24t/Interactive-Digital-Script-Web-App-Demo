@@ -20,7 +20,14 @@
             color: #333;
             text-align: center;
         }
+        h3 {
+            color: #555;
+            /* text-align: end; */
+        }
 
+        .characters-list {
+            /* list-style: none; */
+        }
         .maincharacter {
             font-weight: bold;
             text-transform: uppercase;
@@ -64,6 +71,9 @@
             color: #655;
             max-width: 90%;
             margin: auto;
+            /* text-align: end; */
+        }
+        .stage-direction p{
             text-align: center;
         }
 
@@ -189,7 +199,7 @@
     <h2 id="title">Title</h2>
 
     <div class="stage-direction">
-        <p>CHARACTERS and CAST</p>
+        <h3>CHARACTERS and CAST</h3>
         <ul class="characters-list">
         </ul>
     </div>
@@ -297,7 +307,7 @@
                             const sceneDiv = document.createElement('div');
                             sceneDiv.classList.add('scene');
                             const sceneHeader = document.createElement('h3');
-                            sceneHeader.innerText = sceneIndex + 1 + '.';
+                            sceneHeader.innerText = sceneIndex + 1 + '';
                             sceneDiv.appendChild(sceneHeader);
 
                             // Add stage directions
