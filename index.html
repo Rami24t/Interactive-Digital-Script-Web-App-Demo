@@ -62,6 +62,9 @@
         .stage-direction {
             font-style: italic;
             color: #655;
+            max-width: 90%;
+            margin: auto;
+            text-align: center;
         }
 
         .play-container {
@@ -151,8 +154,8 @@
             text-decoration: underline
         }
 
-
-        .thoughts-container {
+        /*-----------------
+        .notes-container {
             max-width: 660px;
             margin: auto;
             background: white;
@@ -162,15 +165,16 @@
             margin-top: 20px;
         }
 
-        .thoughts-content {
+        .notes-content {
             font-style: italic;
             color: #655;
             line-height: 1.6;
         }
 
-        .thoughts-content p {
+        .notes-content p {
             margin: 10px 0;
         }
+        */
     </style>
 </head>
 
@@ -192,10 +196,6 @@
 
     <div class="play-container">
     </div>
-    <div class="thoughts-container">
-        <h2>Thoughts</h2>
-        <div class="thoughts-content"></div>
-    </div>
 
     <script>
 
@@ -214,7 +214,7 @@
                     }]
                 }],
             THOUGHTS: [
-                "Thoughts paragraph 1", "Thoughts paragraph 2"]
+                "Notes paragraph 1", "Notes paragraph 2"]
             ,
             BY: "Rami\n...",
             "COPYRIGHTS": [
@@ -282,9 +282,9 @@
 
         // Create the script container dynamically
         function createScriptContent(script = SCRIPT) {
-            const scriptContainer = document.querySelector('.play-container');
+            const playContainer = document.querySelector('.play-container');
 
-            scriptContainer.innerHTML = '';
+            playContainer.innerHTML = '';
 
             script.PARTS ?
                 script.PARTS.forEach(part => {
@@ -318,8 +318,14 @@
                                     const characterSpan = document.createElement('span');
                                     characterSpan.classList.add('character', script.CHARACTERS[line.character] || 'stage-direction');
                                     characterSpan.innerText = script.CHARACTERS[line.character] || 'Directions';
-                                    script.CHARACTERS[line.character] ? characterSpan.setAttribute("onclick", "highlight(" + line.character + "," + JSON.stringify(script.CHARACTERS) + ")") :
-                                    characterSpan.style.opacity = "0.2";
+                                    if (script.CHARACTERS[line.character])
+                                        characterSpan.setAttribute("onclick", "highlight(" + line.character + "," + JSON.stringify(script.CHARACTERS) + ")")
+                                    else {
+                                        characterSpan.style.opacity = "0.1";
+                                        characterSpan.style.cursor = "not-allowed";
+                                        characterSpan.style.textDecoration = "none";
+                                    }
+
                                     const lineSpan = document.createElement('span');
                                     lineSpan.classList.add('line');
                                     // if(!script.CHARACTERS[line.character])
@@ -337,22 +343,33 @@
                             partDiv.appendChild(sceneDiv);
                         });
 
-                    scriptContainer.appendChild(partDiv);
+                    playContainer.appendChild(partDiv);
                 })
                 : script.PARTS = [];
-            const createThoughtsContent = () => {
-                const thoughtsContainer = document.querySelector('.thoughts-content');
-                thoughtsContainer.innerHTML = '';
-
+            const createNotesContent = () => {
+                document.querySelector('.notes-container')?.remove();
                 if (script.THOUGHTS) {
-                    script.THOUGHTS.forEach(thought => {
-                        const thoughtParagraph = document.createElement('p');
-                        thoughtParagraph.innerText = thought;
-                        thoughtsContainer.appendChild(thoughtParagraph);
+                    const notesContainer = document.createElement('div')
+                    notesContainer.className = 'notes-container scene';
+
+                    document.querySelector('.play-container').appendChild(notesContainer);
+
+                    const notesContainerTitle = document.createElement('h2')
+                    notesContainerTitle.innerText = 'NOTES';
+                    notesContainer.appendChild(notesContainerTitle);
+
+                    const notesContent = document.createElement('div')
+                    notesContent.className = 'notes-content stage-direction';
+                    notesContainer.appendChild(notesContent);
+
+                    script.THOUGHTS.forEach(note => {
+                        const noteParagraph = document.createElement('p');
+                        noteParagraph.innerText = note;
+                        notesContent.appendChild(noteParagraph);
                     });
                 }
             }
-            // createThoughtsContent();
+            createNotesContent();
         }
 
         let script = SCRIPT || {};
