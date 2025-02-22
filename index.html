@@ -339,7 +339,7 @@
                         <span onclick="highlight(${idx})" 
                         class="maincharacter">${character}</span> - by 
                         <span class="cast" contenteditable="true" onblur="this.innerText = sanitize(this.innerText); this.innerText && localStorage.setItem('${character}', sanitize(this.innerText)); updateActorsNamesInScript(script.CHARACTERS);"> ${character}</span>
-                        <button class="toggleCharacterLinesBtn" onclick="toggleCharacterLines(${idx}, this);">Hide characters's lines</button>
+                        <button class="toggleCharacterLinesBtn" onclick="toggleCharacterLines(${idx}, this);">Hide character's lines</button>
                         </li>`;
             });
         }
