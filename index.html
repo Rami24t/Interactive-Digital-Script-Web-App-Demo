@@ -86,6 +86,7 @@
             font-family: 'Lucida Grande', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             font-weight: bold;
             text-decoration: underline;
+            margin-left: 1px;
         }
 
         .cast:focus {
@@ -178,6 +179,7 @@
             cursor: pointer;
             min-width: 56px;
             opacity: 0.7;
+            font-weight: bold;
         }
 
         textarea {
@@ -219,6 +221,21 @@
 
         p span:first-of-type {
             text-decoration: underline
+        }
+
+        .toggleCharacterLinesBtn {
+            display: block;
+            color: #181;
+            color: #f11;
+            cursor: pointer;
+            font-size: 0.8em;
+            opacity: 0.8;
+            margin: 4px;
+            margin-bottom: 12px;
+        }
+
+        .hidden {
+            display: none;
         }
 
         /*-----------------
@@ -320,8 +337,10 @@
                 charactersList.innerHTML +=
                     `<li>
                         <span onclick="highlight(${idx})" 
-                        class="maincharacter">${character}</span> - 
-                        <span class="cast" contenteditable="true" onblur="this.innerText = sanitize(this.innerText); this.innerText && localStorage.setItem('${character}', sanitize(this.innerText)); updateActorsNamesInScript(script.CHARACTERS);"> ${character}</span></li>`;
+                        class="maincharacter">${character}</span> - by 
+                        <span class="cast" contenteditable="true" onblur="this.innerText = sanitize(this.innerText); this.innerText && localStorage.setItem('${character}', sanitize(this.innerText)); updateActorsNamesInScript(script.CHARACTERS);"> ${character}</span>
+                        <button class="toggleCharacterLinesBtn" onclick="toggleCharacterLines(${idx}, this);">Hide characters's lines</button>
+                        </li>`;
             });
         }
 
@@ -485,6 +504,34 @@
                 }
             }
         }
+
+        function toggleCharacterLines(characterIndex, button) {
+            const character = script.CHARACTERS[characterIndex];
+            const characterLines = document.querySelectorAll(`.${character}`);
+
+            if (button.innerText.toLowerCase().includes('hide')) {
+                button.innerText = 'Show ' + characterLines.length + ' lines';
+                button.style.color = '#f11';
+            }
+            else {
+                button.innerText = 'Hide ' + characterLines.length + ' lines';
+                button.style.color = '#181';
+            }
+
+            characterLines.forEach(line => line.parentElement.classList.toggle('hidden'));
+            if (!localStorage.getItem(`hidden-characters`) || !JSON.parse(localStorage.getItem(`hidden-characters`)).length)
+                localStorage.setItem(`hidden-characters`, JSON.stringify([characterIndex]));
+            else {
+                const hiddenCharacters = JSON.parse(localStorage.getItem(`hidden-characters`));
+                if (hiddenCharacters.includes(characterIndex)) {
+                    hiddenCharacters.splice(hiddenCharacters.indexOf(characterIndex), 1);
+                } else {
+                    hiddenCharacters.push(characterIndex);
+                }
+                localStorage.setItem(`hidden-characters`, JSON.stringify(hiddenCharacters));
+            }
+        }
+
         loadScriptObject();
 
 
@@ -567,14 +614,14 @@
             const deltaX = touchEndX - touchStartX;
             const deltaY = touchEndY - touchStartY;
             if (Math.abs(deltaX) > 27)
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                // Horizontal swipe
-                if (deltaX > 0) {
-                    navigateScenes(-1); // previous scene
-                } else {
-                    navigateScenes(1); // next scene
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    // Horizontal swipe
+                    if (deltaX > 0) {
+                        navigateScenes(-1); // previous scene
+                    } else {
+                        navigateScenes(1); // next scene
+                    }
                 }
-            }
         });
     </script>
 </body>
