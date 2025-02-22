@@ -511,11 +511,11 @@
 
             if (button.innerText.toLowerCase().includes('hide')) {
                 button.innerText = 'Show ' + characterLines.length + ' lines';
-                button.style.color = '#f11';
+                button.style.color = '#181';
             }
             else {
                 button.innerText = 'Hide ' + characterLines.length + ' lines';
-                button.style.color = '#181';
+                button.style.color = '#f11';
             }
 
             characterLines.forEach(line => line.parentElement.classList.toggle('hidden'));
