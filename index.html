@@ -226,6 +226,10 @@
         .readCharacterLinesBtn {
             display: block;
             cursor: pointer;
+            font-size: 0.8em;
+            opacity: 0.8;
+            margin: 4px;
+            margin-bottom: 4px;
         }
 
         .toggleCharacterLinesBtn {
@@ -344,7 +348,7 @@
                         <span onclick="highlight(${idx})" 
                         class="maincharacter">${character}</span> - by 
                         <span class="cast" contenteditable="true" onblur="this.innerText = sanitize(this.innerText); this.innerText && localStorage.setItem('${character}', sanitize(this.innerText)); updateActorsNamesInScript(script.CHARACTERS);"> ${character} </span> 
-                         <button class="readCharacterLinesBtn" onclick="readCharacterLines(${idx})">Read all lines</button>
+                         <button class="readCharacterLinesBtn" onclick="readCharacterLines(${idx})">Read lines</button>
                         <button class="toggleCharacterLinesBtn" onclick="toggleCharacterLines(${idx}, this);">Hide ${character}'s lines</button>
                         </li>`;
             });
