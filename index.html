@@ -223,6 +223,11 @@
             text-decoration: underline
         }
 
+        .readCharacterLinesBtn {
+            display: block;
+            cursor: pointer;
+        }
+
         .toggleCharacterLinesBtn {
             display: block;
             color: #181;
@@ -338,8 +343,9 @@
                     `<li>
                         <span onclick="highlight(${idx})" 
                         class="maincharacter">${character}</span> - by 
-                        <span class="cast" contenteditable="true" onblur="this.innerText = sanitize(this.innerText); this.innerText && localStorage.setItem('${character}', sanitize(this.innerText)); updateActorsNamesInScript(script.CHARACTERS);"> ${character}</span>
-                        <button class="toggleCharacterLinesBtn" onclick="toggleCharacterLines(${idx}, this);">Hide character's lines</button>
+                        <span class="cast" contenteditable="true" onblur="this.innerText = sanitize(this.innerText); this.innerText && localStorage.setItem('${character}', sanitize(this.innerText)); updateActorsNamesInScript(script.CHARACTERS);"> ${character} </span> 
+                         <button class="readCharacterLinesBtn" onclick="readCharacterLines(${idx})">Read all lines</button>
+                        <button class="toggleCharacterLinesBtn" onclick="toggleCharacterLines(${idx}, this);">Hide ${character}'s lines</button>
                         </li>`;
             });
         }
@@ -531,6 +537,33 @@
                 localStorage.setItem(`hidden-characters`, JSON.stringify(hiddenCharacters));
             }
         }
+
+        function readCharacterLines(characterIndex) {
+            speechSynthesis.cancel();
+            function voiceLoaded() {
+                return speechSynthesis.getVoices().length;
+            }
+            function getFemaleVoice(voiceIndex = 0) {
+                return speechSynthesis.getVoices()[voiceIndex];
+            }
+            function speak(text) {
+                // const text = window.getSelection().toString();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.voice = getFemaleVoice(Math.floor(Math.random() * voiceLoaded()));
+                // utterance.rate = 1;
+                // utterance.pitch = 1;
+                speechSynthesis.speak(utterance);
+            }
+            const character = script.CHARACTERS[characterIndex];
+            const characterLines = document.querySelectorAll(`.${character}`);
+            const characterLinesText = Array.from(characterLines).map(line => line.parentElement.lastElementChild.innerText).join('.\n');
+            if (voiceLoaded()) {
+                speak(characterLinesText);
+            } else {
+                speechSynthesis.addEventListener('voiceschanged', () => speak(characterLinesText));
+            }
+        }
+
 
         loadScriptObject();
 
