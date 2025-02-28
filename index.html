@@ -354,7 +354,7 @@
             });
         }
 
-        function highlight(character = 2, characters = SCRIPT.CHARACTERS) {
+        function highlight(character = 2, characters = script.CHARACTERS) {
             document.querySelectorAll('.scene p').forEach(p => {
                 p.classList.remove('highlight');
                 p.classList.remove('interaction');
@@ -488,7 +488,6 @@
             createNotesContent();
         }
 
-        let script = SCRIPT || {};
 
         // Load the saved script
 
@@ -591,8 +590,8 @@
         }
 
 
+        let script = SCRIPT || {};
         loadScriptObject();
-
 
         addTitle(script.TITLE);
         fillCharactersList(script.CHARACTERS);
